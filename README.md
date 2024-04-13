@@ -32,4 +32,3 @@ This is a full-stack web application that allows users to perform CRUD operation
 ## License
 
 This project is open-source and available under the [MIT License](LICENSE).
-```
