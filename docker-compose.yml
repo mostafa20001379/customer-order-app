@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./customer-order-backend
+      dockerfile: Dockerfile
+    image: customer-order-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=database
+      - DB_DATABASE=customer_orders
+      - DB_USERNAME=root
+      - DB_PASSWORD=123456
+    depends_on:
+      - database
+    volumes:
+      - ./customer-order-backend:/app
+    networks:
+      - backend-network
+
+  frontend:
+    build:
+      context: ./customer-order-frontend
+      dockerfile: Dockerfile
+    image: customer-order-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:8000/api
+    depends_on:
+      - backend
+    networks:
+      - backend-network
+
+  database:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: customer_orders
+    volumes:
+      - customer-order-db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - backend-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    links:
+      - database:mysql
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: 123456
+      UPLOAD_LIMIT: 300M
+    networks:
+      - backend-network
+
+volumes:
+  customer-order-db:
+
+networks:
+  backend-network:
+    driver: bridge
