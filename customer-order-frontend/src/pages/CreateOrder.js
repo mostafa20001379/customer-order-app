@@ -17,8 +17,10 @@ const CreateOrder = () => {
     
     return (
         <div className="container mx-auto py-8">
-            <h1 className="text-2xl font-bold mb-4">Create Order</h1>
-            <OrderForm onSubmit={handleSubmit} />
+            <div className="bg-white rounded-lg shadow-lg p-6">
+                <h1 className="text-2xl font-bold mb-4 text-indigo-600">Create Order</h1>
+                <OrderForm onSubmit={handleSubmit} />
+            </div>
         </div>
     );
 };
