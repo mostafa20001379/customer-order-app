@@ -28,9 +28,9 @@ const OrderForm = ({ onSubmit, order = null }) => {
     };
     
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-8 space-y-6">
             <div>
-                <label htmlFor="customer-name" className="block font-medium">
+                <label htmlFor="customer-name" className="block font-medium text-gray-700">
                     Customer Name
                 </label>
                 <input
@@ -38,22 +38,22 @@ const OrderForm = ({ onSubmit, order = null }) => {
                     id="customer-name"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
             </div>
             <div>
-                <label htmlFor="address" className="block font-medium">
+                <label htmlFor="address" className="block font-medium text-gray-700">
                     Address
                 </label>
                 <textarea
                     id="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
             </div>
             <div>
-                <label htmlFor="order-date" className="block font-medium">
+                <label htmlFor="order-date" className="block font-medium text-gray-700">
                     Order Date
                 </label>
                 <input
@@ -61,21 +61,21 @@ const OrderForm = ({ onSubmit, order = null }) => {
                     id="order-date"
                     value={orderDate}
                     onChange={(e) => setOrderDate(e.target.value)}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
             </div>
             <div>
-                <h3 className="text-lg font-medium mb-2">Order Items</h3>
+                <h3 className="text-lg font-medium mb-4 text-gray-800">Order Items</h3>
                 {items.map((item, index) => (
-                    <div key={index} className="border-b border-gray-300 pb-4 mb-4">
-                        <div className="flex items-center justify-between">
-                            <label htmlFor={`product-name-${index}`} className="font-medium">
+                    <div key={index} className="border-b border-gray-200 pb-4 mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                            <label htmlFor={`product-name-${index}`} className="font-medium text-gray-700">
                                 Product Name
                             </label>
                             <button
                                 type="button"
                                 onClick={() => handleRemoveItem(index)}
-                                className="text-red-500 hover:text-red-700"
+                                className="text-red-500 hover:text-red-700 focus:outline-none"
                             >
                                 Remove
                             </button>
@@ -85,11 +85,11 @@ const OrderForm = ({ onSubmit, order = null }) => {
                             id={`product-name-${index}`}
                             value={item.product_name}
                             onChange={(e) => handleItemChange(index, 'product_name', e.target.value)}
-                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mb-2"
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
-                        <div className="flex space-x-4">
+                        <div className="grid grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label htmlFor={`quantity-${index}`} className="block font-medium">
+                                <label htmlFor={`quantity-${index}`} className="block font-medium text-gray-700">
                                     Quantity
                                 </label>
                                 <input
@@ -97,11 +97,11 @@ const OrderForm = ({ onSubmit, order = null }) => {
                                     id={`quantity-${index}`}
                                     value={item.quantity}
                                     onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 />
                             </div>
                             <div>
-                                <label htmlFor={`price-per-unit-${index}`} className="block font-medium">
+                                <label htmlFor={`price-per-unit-${index}`} className="block font-medium text-gray-700">
                                     Price per Unit
                                 </label>
                                 <input
@@ -109,7 +109,7 @@ const OrderForm = ({ onSubmit, order = null }) => {
                                     id={`price-per-unit-${index}`}
                                     value={item.price_per_unit}
                                     onChange={(e) => handleItemChange(index, 'price_per_unit', e.target.value)}
-                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 />
                             </div>
                         </div>
@@ -118,7 +118,7 @@ const OrderForm = ({ onSubmit, order = null }) => {
                 <button
                     type="button"
                     onClick={handleAddItem}
-                    className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
+                    className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Add Item
                 </button>
@@ -126,7 +126,7 @@ const OrderForm = ({ onSubmit, order = null }) => {
             <div className="flex justify-end">
                 <button
                     type="submit"
-                    className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
+                    className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Save Order
                 </button>

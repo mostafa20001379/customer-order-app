@@ -1,9 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-const OrderDetails = ({ orders }) => {
-    const { id } = useParams();
-    const order = orders.find((o) => o.id === parseInt(id));
+const OrderDetails = ({ order }) => {
     
     if (!order) {
         return <div>Loading...</div>;
