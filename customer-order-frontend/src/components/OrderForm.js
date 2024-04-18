@@ -5,6 +5,7 @@ const OrderForm = ({ onSubmit, order = null }) => {
     const [address, setAddress] = useState(order?.address || '');
     const [orderDate, setOrderDate] = useState(order?.order_date || '');
     const [items, setItems] = useState(order?.items || [{ product_name: '', quantity: 0, price_per_unit: 0 }]);
+    const [errors, setErrors] = useState({});
     
     const handleItemChange = (index, field, value) => {
         const updatedItems = [...items];
@@ -22,9 +23,50 @@ const OrderForm = ({ onSubmit, order = null }) => {
         setItems(updatedItems);
     };
     
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = {};
+        
+        if (!customerName.trim()) {
+            newErrors.customerName = 'Customer name is required';
+            isValid = false;
+        }
+        
+        if (!address.trim()) {
+            newErrors.address = 'Address is required';
+            isValid = false;
+        }
+        
+        if (!orderDate.trim()) {
+            newErrors.orderDate = 'Order date is required';
+            isValid = false;
+        }
+        
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (!item.product_name.trim()) {
+                newErrors[`item-${i}-product-name`] = 'Product name is required';
+                isValid = false;
+            }
+            if (item.quantity <= 0) {
+                newErrors[`item-${i}-quantity`] = 'Quantity must be greater than 0';
+                isValid = false;
+            }
+            if (item.price_per_unit <= 0) {
+                newErrors[`item-${i}-price-per-unit`] = 'Price per unit must be greater than 0';
+                isValid = false;
+            }
+        }
+        
+        setErrors(newErrors);
+        return isValid;
+    };
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ customer_name: customerName, address, order_date: orderDate, items });
+        if (validateForm()) {
+            onSubmit({ customer_name: customerName, address, order_date: orderDate, items });
+        }
     };
     
     return (
@@ -38,8 +80,13 @@ const OrderForm = ({ onSubmit, order = null }) => {
                     id="customer-name"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                        errors.customerName ? 'border-red-500' : ''
+                    }`}
                 />
+                {errors.customerName && (
+                    <p className="text-red-500 text-sm mt-1">{errors.customerName}</p>
+                )}
             </div>
             <div>
                 <label htmlFor="address" className="block font-medium text-gray-700">
@@ -49,8 +96,13 @@ const OrderForm = ({ onSubmit, order = null }) => {
                     id="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                        errors.address ? 'border-red-500' : ''
+                    }`}
                 />
+                {errors.address && (
+                    <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+                )}
             </div>
             <div>
                 <label htmlFor="order-date" className="block font-medium text-gray-700">
@@ -61,8 +113,13 @@ const OrderForm = ({ onSubmit, order = null }) => {
                     id="order-date"
                     value={orderDate}
                     onChange={(e) => setOrderDate(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                        errors.orderDate ? 'border-red-500' : ''
+                    }`}
                 />
+                {errors.orderDate && (
+                    <p className="text-red-500 text-sm mt-1">{errors.orderDate}</p>
+                )}
             </div>
             <div>
                 <h3 className="text-lg font-medium mb-4 text-gray-800">Order Items</h3>
@@ -85,8 +142,13 @@ const OrderForm = ({ onSubmit, order = null }) => {
                             id={`product-name-${index}`}
                             value={item.product_name}
                             onChange={(e) => handleItemChange(index, 'product_name', e.target.value)}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                                errors[`item-${index}-product-name`] ? 'border-red-500' : ''
+                            }`}
                         />
+                        {errors[`item-${index}-product-name`] && (
+                            <p className="text-red-500 text-sm mt-1">{errors[`item-${index}-product-name`]}</p>
+                        )}
                         <div className="grid grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label htmlFor={`quantity-${index}`} className="block font-medium text-gray-700">
@@ -97,8 +159,13 @@ const OrderForm = ({ onSubmit, order = null }) => {
                                     id={`quantity-${index}`}
                                     value={item.quantity}
                                     onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                                        errors[`item-${index}-quantity`] ? 'border-red-500' : ''
+                                    }`}
                                 />
+                                {errors[`item-${index}-quantity`] && (
+                                    <p className="text-red-500 text-sm mt-1">{errors[`item-${index}-quantity`]}</p>
+                                )}
                             </div>
                             <div>
                                 <label htmlFor={`price-per-unit-${index}`} className="block font-medium text-gray-700">
@@ -109,8 +176,13 @@ const OrderForm = ({ onSubmit, order = null }) => {
                                     id={`price-per-unit-${index}`}
                                     value={item.price_per_unit}
                                     onChange={(e) => handleItemChange(index, 'price_per_unit', e.target.value)}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                                        errors[`item-${index}-price-per-unit`] ? 'border-red-500' : ''
+                                    }`}
                                 />
+                                {errors[`item-${index}-price-per-unit`] && (
+                                    <p className="text-red-500 text-sm mt-1">{errors[`item-${index}-price-per-unit`]}</p>
+                                )}
                             </div>
                         </div>
                     </div>
