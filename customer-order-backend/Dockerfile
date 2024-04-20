@@ -37,9 +37,10 @@ COPY .env.example .env
 
 # Laravel key generation
 RUN php artisan key:generate
+RUN php artisan install:api
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Expose port 8000 for PHP-FPM
+EXPOSE 8000
 
 # Start PHP-FPM
 CMD ["php-fpm"]
