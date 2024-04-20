@@ -29,11 +29,10 @@ const Orders = () => {
     
     return (
         <div className="container mx-auto py-8">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">All Orders</h1>
+            <div className="flex justify-end items-center mb-4">
                 <Link
                     to="/orders/create"
-                    className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
+                    className="mx-3 bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
                 >
                     Create Order
                 </Link>
