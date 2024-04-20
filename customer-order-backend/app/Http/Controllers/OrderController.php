@@ -8,15 +8,10 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $orders = Order::with('items')->paginate(10);
-        return view('orders.index', compact('orders'));
-    }
-
-    public function create()
-    {
-        return view('orders.create');
+        return response()->json($orders);
     }
 
     public function store(Request $request)
@@ -31,24 +26,17 @@ class OrderController extends Controller
         ]);
 
         $order = Order::create($validatedData);
-
         foreach ($request->input('items') as $item) {
             $order->items()->create($item);
         }
 
-        return redirect()->route('orders.show', $order->id);
+        return response()->json($order, 201);
     }
 
     public function show(Order $order)
     {
         $order->load('items');
-        return view('orders.show', compact('order'));
-    }
-
-    public function edit(Order $order)
-    {
-        $order->load('items');
-        return view('orders.edit', compact('order'));
+        return response()->json($order);
     }
 
     public function update(Request $request, Order $order)
@@ -64,7 +52,6 @@ class OrderController extends Controller
         ]);
 
         $order->update($validatedData);
-
         foreach ($validatedData['items'] as $item) {
             if (isset($item['id'])) {
                 $orderItem = OrderItem::findOrFail($item['id']);
@@ -74,12 +61,12 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('orders.show', $order->id);
+        return response()->json($order);
     }
 
     public function destroy(Order $order)
     {
         $order->delete();
-        return redirect()->route('orders.index');
+        return response()->json(null, 204);
     }
 }
