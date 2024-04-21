@@ -1,46 +1,45 @@
-FROM php:fpm-alpine
+FROM php:8.1-apache
 
-WORKDIR .
-
-# Install dependencies
-RUN apk --no-cache add \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
     curl \
-    libpng \
     libpng-dev \
-    libjpeg-turbo-dev \
-    libwebp-dev \
-    zlib-dev \
-    libzip-dev \
-    composer \
-    php-xml
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libzip-dev
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-jpeg --with-webp \
-    && docker-php-ext-install gd pdo pdo_mysql zip
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Set recommended PHP configuration
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy application files
-COPY . .
+# Copy the Laravel project files
+COPY . /var/www/html
 
-# Set file permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Copy the environment file (if necessary)
+COPY .env.example /var/www/html/.env
 
-# Install Composer dependencies and update
-RUN composer install --ignore-platform-reqs --no-scripts \
-    && composer update --ignore-platform-reqs --no-scripts
+# Install project dependencies
+RUN composer install --working-dir=/var/www/html --prefer-dist --no-scripts
 
-# Copy the appropriate .env file
-COPY .env.example .env
+# Generate the application key
+RUN php /var/www/html/artisan key:generate
 
-# Laravel key generation
-RUN php artisan key:generate
-RUN php artisan install:api
+# Set the correct file permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 8000 for PHP-FPM
+# Enable Apache rewrite module
+RUN a2enmod rewrite
+
+# Expose port 8000 for Laravel development server
 EXPOSE 8000
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Start Laravel development server
+CMD php /var/www/html/artisan serve --host=0.0.0.0 --port=8000
