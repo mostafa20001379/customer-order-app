@@ -5,7 +5,6 @@ services:
     build:
       context: ./customer-order-backend
       dockerfile: Dockerfile
-    image: customer-order-backend
     ports:
       - "8000:8000"
     environment:
@@ -15,8 +14,8 @@ services:
       - DB_PASSWORD=123456
     depends_on:
       - database
-    volumes:
-      - ./customer-order-backend:/app
+#    volumes:
+#      - ./customer-order-backend:/var/www/html
     networks:
       - backend-network
 
@@ -28,7 +27,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://backend:8000/api
+      - REACT_APP_API_URL=http://backend:9000/api
     depends_on:
       - backend
     networks:

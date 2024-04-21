@@ -1,6 +1,7 @@
 # Customer Order Management Application
 
-This is a full-stack web application that allows users to perform CRUD operations (Create, Read, Update, Delete) for customer orders. The backend is built using Laravel, and the frontend uses React.js with Tailwind CSS for styling.
+This is a full-stack web application that allows users to perform CRUD operations (Create, Read, Update, Delete) for
+customer orders. The backend is built using Laravel, and the frontend uses React.js with Tailwind CSS for styling.
 
 ## Prerequisites
 
@@ -18,13 +19,14 @@ This is a full-stack web application that allows users to perform CRUD operation
      docker compose up -d
      ```
    This will start the following containers:
-   - `backend`: The Laravel application container.
-   - `frontend`: The React.js frontend container.
-   - `database`: The MySQL database container.
-3. Migrate the database tables and seed the database:
-    ```bash
-    docker compose exec backend php artisan migrate --seed
-    ```
+    - `backend`: The Laravel application container.
+    - `frontend`: The React.js frontend container.
+    - `database`: The MySQL database container.
+
+3. Seed the database:
+   ```bash
+   docker compose exec backend php artisan migrate --seed
+   ```
 
 4. Visit the application in your browser:
    http://localhost:3000
